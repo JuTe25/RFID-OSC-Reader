@@ -7,5 +7,7 @@ Die Erarbetung geschieht im Rahmen des Moduls "Anwendungen von Medientechnologie
 - 3D Modelle erstellen & Drucken
 - Tisch konzipieren
 - Tisch bauen
+- Kuppel organisieren
 - OSC Nachrichten an Medienserver schicken
 - OSC Nachrichten mit Content verbinden
+- Projektoren auf Kuppel mappen mit Edge Blending
