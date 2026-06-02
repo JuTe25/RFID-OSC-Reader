@@ -51,7 +51,7 @@ void setup() {
   
   delay(100);
   
-  Serial.println(F("\n\n=== Arduino RFID-OSC Receiver ==="));
+  Serial.println(F("\n\n=== Arduino RFID-OSC Sender ==="));
   Serial.println(F("Initializing Ethernet..."));
   
   // Ethernet initialisieren
