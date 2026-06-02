@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-OSC RFID Receiver for Arduino + Ethernet Shield
-Empfängt RFID-Daten (UID, Vorname, Nachname) vom Arduino
+OSC RFID Receiver für Museum-Spiel
+Empfängt Chip ID (Figur) und Standort ID vom Arduino
 """
 
 import sys
@@ -27,7 +27,7 @@ def rfid_handler(address, *args):
     
     Args:
       address: OSC Address (/rfid)
-      *args: Tuple mit (uid, firstName, lastName)
+      *args: Tuple mit (uid, chipID, locationID)
     """
     print(f"\nDebug - Address: {address}")
     print(f"Debug - Args type: {type(args)}")
@@ -36,25 +36,25 @@ def rfid_handler(address, *args):
     
     if len(args) >= 3:
         uid = args[0]
-        first_name = args[1]
-        last_name = args[2]
+        chip_id = args[1]
+        location_id = args[2]
         
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         print("\n" + "="*60)
-        print(f"[{timestamp}] RFID Card Detected!")
+        print(f"[{timestamp}] Figure Detected!")
         print("="*60)
-        print(f"UID:       {uid}")
-        print(f"Vorname:   {first_name}")
-        print(f"Nachname:  {last_name}")
+        print(f"UID:           {uid}")
+        print(f"Figure ID:     {chip_id}")
+        print(f"Location ID:   {location_id}")
         print("="*60)
         
         # Speichere Daten für weitere Verarbeitung
         card_entry = {
             'timestamp': timestamp,
             'uid': uid,
-            'firstName': first_name,
-            'lastName': last_name
+            'chipID': chip_id,
+            'locationID': location_id
         }
         card_data.append(card_entry)
         
@@ -67,9 +67,9 @@ def rfid_handler(address, *args):
 
 def on_card_detected(card_info):
     """
-    Callback-Funktion, wird aufgerufen wenn Karte erkannt wird
+    Callback-Funktion, wird aufgerufen wenn Figur erkannt wird
     """
-    print(f"\n→ Processing: {card_info['firstName']} {card_info['lastName']} ({card_info['uid']})")
+    print(f"\n→ Processing: Figure {card_info['chipID']} at Location {card_info['locationID']} ({card_info['uid']})")
 
 
 def setup_osc_server():

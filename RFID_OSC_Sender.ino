@@ -30,6 +30,9 @@ EthernetUDP Udp;
 IPAddress outIp(192, 168, 1, 42);
 int outPort = 8000;
 
+// ============= Device Configuration =============
+const String LOCATION_ID = "LOCATION_01";  // Feste Standort-ID (Arduino an diesem Standort)
+
 // ============= Timing =============
 unsigned long lastCardRead = 0;
 const unsigned long cardReadDelay = 1000;
@@ -135,22 +138,21 @@ void loop() {
   byte len = 18;
   MFRC522::StatusCode status;
   
-  String firstName = "";
-  String lastName = "";
+  String chipID = "";
 
-  // --- GET FIRST NAME (Block 4) ---
-  block = 4;
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 4, &key, &(mfrc522.uid));
+  // --- GET CHIP ID / FIGURE ID (Block 1) ---
+  block = 1;
+  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 1, &key, &(mfrc522.uid));
   if (status == MFRC522::STATUS_OK) {
     status = mfrc522.MIFARE_Read(block, buffer, &len);
     if (status == MFRC522::STATUS_OK) {
       for (uint8_t i = 0; i < 16; i++) {
         if (buffer[i] != 32 && buffer[i] != 0) {
-          firstName += (char)buffer[i];
+          chipID += (char)buffer[i];
         }
       }
-      Serial.print(F("First Name: "));
-      Serial.println(firstName);
+      Serial.print(F("Chip ID (Figure): "));
+      Serial.println(chipID);
     } else {
       Serial.print(F("Read error: "));
       Serial.println(mfrc522.GetStatusCodeName(status));
@@ -160,21 +162,9 @@ void loop() {
     Serial.println(mfrc522.GetStatusCodeName(status));
   }
 
-  // --- GET LAST NAME (Block 1) ---
-  block = 1;
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 1, &key, &(mfrc522.uid));
-  if (status == MFRC522::STATUS_OK) {
-    status = mfrc522.MIFARE_Read(block, buffer, &len);
-    if (status == MFRC522::STATUS_OK) {
-      for (uint8_t i = 0; i < 16; i++) {
-        if (buffer[i] != 32 && buffer[i] != 0) {
-          lastName += (char)buffer[i];
-        }
-      }
-      Serial.print(F("Last Name: "));
-      Serial.println(lastName);
-    }
-  }
+  // --- USE FIXED LOCATION ID ---
+  Serial.print(F("Location ID (Station): "));
+  Serial.println(LOCATION_ID);
 
   // --- GET UID ---
   String UID = "";
@@ -186,7 +176,7 @@ void loop() {
   Serial.println(UID);
 
   // ============= OSC Message versenden =============
-  sendOSCMessage(firstName, lastName, UID);
+  sendOSCMessage(chipID, LOCATION_ID, UID);
 
   Serial.println(F("**End Reading**\n"));
 
@@ -198,15 +188,15 @@ void loop() {
 }
 
 //*****************************************************************************************//
-void sendOSCMessage(String firstName, String lastName, String uid) {
+void sendOSCMessage(String chipID, String locationID, String uid) {
   
   Serial.println(F("Sending OSC Message..."));
   
   // Erstelle OSC Message
   OSCMessage msg("/rfid");
   msg.add(uid.c_str());
-  msg.add(firstName.c_str());
-  msg.add(lastName.c_str());
+  msg.add(chipID.c_str());
+  msg.add(locationID.c_str());
 
   // Versende via UDP
   Udp.beginPacket(outIp, outPort);
@@ -219,9 +209,9 @@ void sendOSCMessage(String firstName, String lastName, String uid) {
   Serial.print(F(" | Args: "));
   Serial.print(uid);
   Serial.print(F(", "));
-  Serial.print(firstName);
+  Serial.print(chipID);
   Serial.print(F(", "));
-  Serial.println(lastName);
+  Serial.println(locationID);
 }
 
 //*****************************************************************************************//
