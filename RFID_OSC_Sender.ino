@@ -52,13 +52,10 @@ void setup() {
   delay(100);
   
   Serial.println(F("\n\n=== Arduino RFID-OSC Sender ==="));
-  Serial.println(F("Initializing Ethernet..."));
+  Serial.println(F("Initializing Ethernet with static IP..."));
   
-  // Ethernet initialisieren
-  if (Ethernet.begin(mac) == 0) {
-    Serial.println(F("Failed to configure Ethernet using DHCP"));
-    Ethernet.begin(mac, ip);
-  }
+  // Ethernet initialisieren mit einer festen IP-Adresse (kein DHCP)
+  Ethernet.begin(mac, ip);
   
   Serial.print(F("Ethernet OK - IP: "));
   Serial.println(Ethernet.localIP());

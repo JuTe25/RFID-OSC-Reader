@@ -20,4 +20,5 @@ Die Erarbeitung geschieht im Rahmen des Moduls "Anwendungen von Medientechnologi
 - Kuppel organisieren
 - OSC Nachrichten an Medienserver schicken
 - OSC Nachrichten mit Content verbinden
+- TouchDesigner oder Pixera?
 - Projektoren auf Kuppel mappen mit Edge Blending
