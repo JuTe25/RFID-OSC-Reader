@@ -13,12 +13,10 @@ Die Erarbeitung geschieht im Rahmen des Moduls "Anwendungen von Medientechnologi
 - **Location ID**: Standort-ID (hardcoded im Arduino) - wo sich der Sensor befindet
 
 ### Aktuell offene Aufgaben:
-- Content erstellen
-- 3D Modelle erstellen & drucken
+-  weiteren Content erstellen
 - Tisch konzipieren
 - Tisch bauen
 - Kuppel organisieren
-- OSC Nachrichten an Medienserver schicken
 - OSC Nachrichten mit Content verbinden
 - TouchDesigner oder Pixera?
 - Projektoren auf Kuppel mappen mit Edge Blending
